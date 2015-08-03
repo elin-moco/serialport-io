@@ -1,0 +1,39 @@
+{
+  "name": "serialport-io",
+  "version": "0.1.0",
+  "description": "Virtual serial device over socket.io",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:elin-moco/serialport-io.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Eddie Lin"
+  },
+  "license": "Apache License 2.0",
+  "dependencies": {
+    "serialport": "^1.7.4",
+    "socket.io": "^1.3.6"
+  },
+  "homepage": "https://github.com/elin-moco/serialport-io",
+  "devDependencies": {
+    "del": "^1.2.0",
+    "firmata": "^0.5.5",
+    "gulp": "^3.9.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-compressor": "^0.1.0",
+    "gulp-jscs": "^1.6.0",
+    "gulp-jscs-stylish": "^1.1.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-jsonlint": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sloc": "^1.0.4",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.6",
+    "johnny-five": "^0.8.85",
+    "jscs-jsdoc": "^1.1.0"
+  }
+}
