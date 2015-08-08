@@ -11,18 +11,32 @@ function SocketIoSerialPort(options) {
   this.buffer = null;
 
   var self = this;
+  var START_SYSEX = 0xF0;
+  var END_SYSEX = 0xF7;
 
   this.client.on('device-data-read', function(data) {
     try {
-      console.log('received', data);
       if (data.buffer && data.device.channel == self.device.channel &&
         data.device.address == self.device.address) {
-        self.emit('data', data.buffer);
-        console.log('data read');
+        data = new Uint8Array(data.buffer);
+        if (null !== self.buffer) {
+          self.buffer = self._concatBuffer(self.buffer, data);
+          if (data[data.length - 1] === END_SYSEX) {
+            //end of SYSEX response
+            self.emit('data', self.buffer);
+            self.buffer = null;
+          }
+        } else if (data[0] === START_SYSEX &&
+          data[data.length - 1] !== END_SYSEX) {
+          //SYSEX response incomplete, wait for END_SYSEX byte
+          self.buffer = data;
+        } else {
+          self.emit('data', data);
+        }
+        //self.emit('data', data.buffer);
       }
-
-    } catch (exp) {
-      console.log('error on message', exp);
+    } catch (e) {
+      console.log('error on message', e);
       //self.emit('error', 'error receiving message: ' + exp);
     }
   });
@@ -37,14 +51,16 @@ SocketIoSerialPort.prototype.open = function(callback) {
 };
 
 SocketIoSerialPort.prototype.write = function(data, callback) {
+  try {
+    var sendObj = {};
+    sendObj.device = this.device;
+    sendObj.buffer = data;
 
-  console.log('sending data:', data);
-
-  var sendObj = {};
-  sendObj.device = this.device;
-  sendObj.buffer = data;
-
-  this.client.emit('device-data-write', sendObj, callback);
+    this.client.emit('device-data-write', sendObj, callback);
+  } catch (e) {
+    console.log('error on message', e);
+    //self.emit('error', 'error receiving message: ' + exp);
+  }
 };
 
 SocketIoSerialPort.prototype.close = function(callback) {
@@ -64,6 +80,13 @@ SocketIoSerialPort.prototype.drain = function(callback) {
   if (callback) {
     callback();
   }
+};
+
+SocketIoSerialPort.prototype._concatBuffer = function(buffer1, buffer2) {
+  var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+  tmp.set(buffer1 , 0);
+  tmp.set(buffer2, buffer1.byteLength);
+  return tmp;
 };
 
 module.exports = {

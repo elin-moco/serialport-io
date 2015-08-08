@@ -15,15 +15,10 @@ io.on('connection', function(socket) {
   //write data to device
   socket.on('device-data-write', function(data, callback) {
     try {
-      console.log('data-write', data);
       if (data.buffer) {
-        if (typeof data === 'string') {
-          data = new Buffer(data, 'base64');
-        }
         var deviceKey = data.device.channel + ':' + data.device.address;
         if (connectedDevices.indexOf(deviceKey) >= 0 && allDevices[deviceKey]) {
-          allDevices[deviceKey].write(data);
-          console.log('data written');
+          allDevices[deviceKey].write(data.buffer);
         }
         if (callback) {
           callback();
@@ -36,7 +31,7 @@ io.on('connection', function(socket) {
 
   socket.on('device-connect', function(device, callback) {
     try {
-      console.log('device-connect', device);
+      console.log('device connected');
       //read data from device
       var sp;
       if (device.channel == 'serial') {
@@ -44,13 +39,11 @@ io.on('connection', function(socket) {
           baudrate: 57600,
           buffersize: 1
         });
-        console.log('serialport connected');
       } else if (device.channel == 'ble') {
         //TODO: Initialize BLE serial port
       }
       if (sp) {
         sp.on('data', function(data) {
-          console.log('data-read', data);
           if (!Buffer.isBuffer(data)) {
             data = new Buffer(data);
           }
@@ -76,6 +69,7 @@ io.on('connection', function(socket) {
 
   socket.on('device-disconnect', function(device, callback) {
     try {
+      console.log('device connected');
       if (callback) {
         callback();
       }
