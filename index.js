@@ -16,6 +16,7 @@ function SocketIoSerialPort(options) {
 
   this.client.on('device-data-read', function(data) {
     try {
+      //Make sure we only get data that's targeting this device
       if (data.buffer && data.device.channel == self.device.channel &&
         data.device.address == self.device.address) {
         data = new Uint8Array(data.buffer);
@@ -33,7 +34,6 @@ function SocketIoSerialPort(options) {
         } else {
           self.emit('data', data);
         }
-        //self.emit('data', data.buffer);
       }
     } catch (e) {
       console.log('error on message', e);
