@@ -29,6 +29,8 @@ You'll find the browserified scripts in `build` folder
 node server.js
 ```
 Will get you started, server is listening on port 3000 by default.
+This server pass data bewteen browser and node.js to control your device,
+make sure your server is running before running your code in browser.
 
 # Use with Johnny Five
 
@@ -64,6 +66,7 @@ sp.open(function() {
 ```
 
 And you should see the LED blinks once you have the webapp(page) opened.
+Or you can open examples/j5.html directly to see live demo.
 
 # Use with Firmata
 
@@ -98,6 +101,7 @@ sp.open(function() {
 ```
 
 And you should see the LED on once you have the webapp(page) opened.
+Or you can open examples/firmata.html directly to see live demo.
 
 # USB port address
 
