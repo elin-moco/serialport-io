@@ -11,6 +11,8 @@ var sp = new SocketIoSerialPort({
   }
 });
 
+var toggle = document.getElementById('led-toggle');
+
 sp.open(function() {
   console.log('SocketIoSerialPort.open');
   // have a ready serial port, do something with it:
@@ -18,5 +20,8 @@ sp.open(function() {
   board.on('ready', function() {
     console.log('actually connected to an arduino!');
     board.digitalWrite(7, 1);
+    toggle.addEventListener('change', function() {
+      board.digitalWrite(7, this.checked);
+    })
   });
 });
