@@ -70,12 +70,25 @@ io.on('connection', function(socket) {
   socket.on('device-disconnect', function(device, callback) {
     try {
       console.log('device connected');
+      //reset and clear device
+      var deviceKey = device.channel + ':' + device.address;
+      allDevices[deviceKey].write(new Uint8Array([0xFF]));
+      connectedDevices.splice(connectedDevices.indexOf(deviceKey), 1);
       if (callback) {
         callback();
       }
     } catch (exp) {
       console.log('error disconnecting device', device, exp);
     }
+  });
+
+  socket.on('disconnect', function () {
+    console.log('socket disconnected');
+    //reset and clear all connected devices
+    connectedDevices.forEach(function(deviceKey) {
+      allDevices[deviceKey].write(new Uint8Array([0xFF]));
+    });
+    connectedDevices = [];
   });
 });
 console.log('server ready');

@@ -5,7 +5,13 @@
 </head>
 <body>
 <input type="checkbox" id="led-blink" checked>
-<label for="led-blink">Blink LED</label>
+<label for="led-blink">Blink LED</label><br><br>
+<input type="checkbox" id="switch">
+<label for="switch">Switch</label><br><br>
+<label for="proximity">Proximity</label>
+<input type="text" id="proximity"><br><br>
+<label for="servo"></label>
+<input id="servo" type="range" max="180" min="0" value="0">
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script type="application/javascript" src="../build/j5-bundle.js"></script>
 <script type="application/javascript" src="j5-example.js"></script>
