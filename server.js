@@ -3,8 +3,9 @@
 
 var Server = require('socket.io');
 var io = new Server(3000);
-var SerialPort = require('serialport').SerialPort;
 //var SERIAL_PORT = process.env.SERIAL_PORT || '/dev/cu.usbmodem1411';
+var SerialPort = require('serialport').SerialPort;
+//var BleSerialPort = require('../ble-serialport').SerialPort;
 
 var allDevices = {};
 
@@ -12,13 +13,36 @@ io.on('connection', function(socket) {
   console.log('socket connected');
   var connectedDevices = [];
 
+  function initDevice(sp, device, callback) {
+    if (sp) {
+      sp.on('data', function(data) {
+        if (!Buffer.isBuffer(data)) {
+          data = new Buffer(data);
+        }
+
+        var sendObj = {};
+        sendObj.device = device;
+        sendObj.buffer = data;
+
+        io.emit('device-data-read', sendObj);
+      });
+      var deviceKey = device.channel + ':' + device.address;
+      allDevices[deviceKey] = sp;
+      connectedDevices.push(deviceKey);
+    }
+
+    if (callback) {
+      callback();
+    }
+  }
+
   //write data to device
   socket.on('device-data-write', function(data, callback) {
     try {
       if (data.buffer) {
         var deviceKey = data.device.channel + ':' + data.device.address;
         if (connectedDevices.indexOf(deviceKey) >= 0 && allDevices[deviceKey]) {
-          allDevices[deviceKey].write(data.buffer);
+          allDevices[deviceKey].write(new Uint8Array(data.buffer.data));
         }
         if (callback) {
           callback();
@@ -39,28 +63,13 @@ io.on('connection', function(socket) {
           baudrate: 57600,
           buffersize: 1
         });
+        initDevice(sp, device, callback);
       } else if (device.channel == 'ble') {
-        //TODO: Initialize BLE serial port
-      }
-      if (sp) {
-        sp.on('data', function(data) {
-          if (!Buffer.isBuffer(data)) {
-            data = new Buffer(data);
-          }
-
-          var sendObj = {};
-          sendObj.device = device;
-          sendObj.buffer = data;
-
-          io.emit('device-data-read', sendObj);
-        });
-        var deviceKey = device.channel + ':' + device.address;
-        allDevices[deviceKey] = sp;
-        connectedDevices.push(deviceKey);
-      }
-
-      if (callback) {
-        callback();
+        //Initialize BLE serial port
+        //sp = new BleSerialPort(device);
+        //sp.connect().then(function() {
+        //  initDevice(sp, device, callback);
+        //});
       }
     } catch (exp) {
       console.log('error connecting device', device, exp);

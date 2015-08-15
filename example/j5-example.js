@@ -8,6 +8,9 @@ var sp = new SocketIoSerialPort({
   device: {   //put your device channel/address here
     channel: 'serial',
     address: '/dev/cu.usbmodem1411'
+    //channel: 'ble',
+    //name: 'BleFirmata',
+    //address: 'd0:6a:cf:58:ee:bd'
   }
 });
 
