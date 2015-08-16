@@ -1,6 +1,6 @@
 {
   "name": "serialport-io",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Virtual serial device over socket.io",
   "main": "index.js",
   "repository": {
@@ -16,7 +16,8 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "serialport": "^1.7.4",
-    "socket.io": "^1.3.6"
+    "socket.io": "^1.3.6",
+    "node-firefox": "^0.1.0"
   },
   "homepage": "https://github.com/elin-moco/serialport-io",
   "devDependencies": {

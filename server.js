@@ -6,6 +6,8 @@ var io = new Server(3000);
 //var SERIAL_PORT = process.env.SERIAL_PORT || '/dev/cu.usbmodem1411';
 var SerialPort = require('serialport').SerialPort;
 //var BleSerialPort = require('../ble-serialport').SerialPort;
+var firefox = require('node-firefox');
+var fxosClient;
 
 var allDevices = {};
 
@@ -89,6 +91,52 @@ io.on('connection', function(socket) {
     } catch (exp) {
       console.log('error disconnecting device', device, exp);
     }
+  });
+
+  socket.on('list-fxos-devices', function(callback, errorCallback) {
+    console.log('list fxos devices');
+    firefox.findDevices().then(firefox.forwardPorts).then(function(result) {
+      if (callback) {
+        callback(result);
+      }
+    }).catch(function() {
+      if (errorCallback) {
+        errorCallback();
+      }
+    });
+  });
+
+  socket.on('connect-fxos-device', function(port, callback, errorCallback) {
+    console.log('connect fxos device');
+    firefox.connect(port).then(function(client) {
+      fxosClient = client;
+      if (callback) {
+        callback();
+      }
+    }).catch(function() {
+      if (errorCallback) {
+        errorCallback();
+      }
+    });
+  });
+
+  socket.on('deploy-on-fxos-device', function(app, callback, errorCallback) {
+    console.log('install on fxos device');
+    firefox.installApp({
+      //appPath: '/Users/yshlin/Source/ble-explorer',
+      appPath: app,
+      client: fxosClient
+    }).then(function(appId) {
+      console.log('App was installed with appId = ', appId);
+      if (callback) {
+        callback(appId);
+      }
+    }, function(error) {
+      console.error('App could not be installed: ', error);
+      if (errorCallback) {
+        errorCallback();
+      }
+    });
   });
 
   socket.on('disconnect', function () {
