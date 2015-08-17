@@ -97,6 +97,7 @@ io.on('connection', function(socket) {
     console.log('list fxos devices');
     firefox.findDevices().then(firefox.forwardPorts).then(function(result) {
       if (callback) {
+        console.log('list fxos devices callback');
         callback(result);
       }
     }).catch(function() {
@@ -139,7 +140,7 @@ io.on('connection', function(socket) {
     });
   });
 
-  socket.on('disconnect', function () {
+  socket.on('disconnect', function() {
     console.log('socket disconnected');
     //reset and clear all connected devices
     connectedDevices.forEach(function(deviceKey) {

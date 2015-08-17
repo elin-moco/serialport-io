@@ -89,6 +89,25 @@ SocketIoSerialPort.prototype._concatBuffer = function(buffer1, buffer2) {
   return tmp;
 };
 
+function SocketIoFirefox(socket) {
+  this.client = socket;
+}
+
+SocketIoFirefox.prototype.listDevices = function(callback) {
+  this.client.emit('list-fxos-devices', callback);
+};
+
+SocketIoFirefox.prototype.connectDevice =
+  function(port, callback) {
+    this.client.emit('connect-fxos-device', port, callback);
+  };
+
+SocketIoFirefox.prototype.deployOnDevice =
+  function(app, callback) {
+    this.client.emit('deploy-on-fxos-device', app, callback);
+  };
+
 module.exports = {
-  SerialPort: SocketIoSerialPort
+  SerialPort: SocketIoSerialPort,
+  Firefox: SocketIoFirefox
 };

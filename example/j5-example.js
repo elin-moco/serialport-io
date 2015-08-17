@@ -27,8 +27,7 @@ sp.open(function() {
     toggle.addEventListener('change', function() {
       if (this.checked) {
         led.blink();
-      }
-      else {
+      } else {
         led.stop();
       }
     });

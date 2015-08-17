@@ -22,6 +22,6 @@ sp.open(function() {
     board.digitalWrite(7, 1);
     toggle.addEventListener('change', function() {
       board.digitalWrite(7, this.checked);
-    })
+    });
   });
 });
