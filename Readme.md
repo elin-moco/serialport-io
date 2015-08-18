@@ -66,7 +66,7 @@ sp.open(function() {
 ```
 
 And you should see the LED blinks once you have the webapp(page) opened.
-Or you can open examples/j5.html directly to see live demo.
+Or you can open example/browser-j5.html directly to see live demo.
 
 # Use with Firmata
 
@@ -101,7 +101,7 @@ sp.open(function() {
 ```
 
 And you should see the LED on once you have the webapp(page) opened.
-Or you can open examples/firmata.html directly to see live demo.
+Or you can open example/browser-firmata.html directly to see live demo.
 
 # USB port address
 

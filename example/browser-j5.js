@@ -6,11 +6,11 @@ var socket = io('ws://localhost:3000');
 var sp = new SocketIoSerialPort({
   client: socket,
   device: {   //put your device channel/address here
-    channel: 'serial',
-    address: '/dev/cu.usbmodem1411'
-    //channel: 'ble',
-    //name: 'BleFirmata',
-    //address: 'd0:6a:cf:58:ee:bd'
+    //channel: 'serial',
+    //address: '/dev/cu.usbmodem1411'
+    channel: 'ble',
+    name: 'BleFirmata',
+    address: 'd0:6a:cf:58:ee:bd'
   }
 });
 

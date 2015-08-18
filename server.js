@@ -5,7 +5,7 @@ var Server = require('socket.io');
 var io = new Server(3000);
 //var SERIAL_PORT = process.env.SERIAL_PORT || '/dev/cu.usbmodem1411';
 var SerialPort = require('serialport').SerialPort;
-//var BleSerialPort = require('../ble-serialport').SerialPort;
+var BleSerialPort = require('ble-serialport').SerialPort;
 var firefox = require('node-firefox');
 var fxosClient;
 
@@ -68,10 +68,10 @@ io.on('connection', function(socket) {
         initDevice(sp, device, callback);
       } else if (device.channel == 'ble') {
         //Initialize BLE serial port
-        //sp = new BleSerialPort(device);
-        //sp.connect().then(function() {
-        //  initDevice(sp, device, callback);
-        //});
+        sp = new BleSerialPort(device);
+        sp.connect().then(function() {
+          initDevice(sp, device, callback);
+        });
       }
     } catch (exp) {
       console.log('error connecting device', device, exp);
