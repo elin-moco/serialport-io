@@ -59,7 +59,7 @@ io.on('connection', function(socket) {
     var device = data.device;
     var deviceKey = device.channel + ':' + device.address;
     data = data.buffer;
-    if (!data instanceof Buffer) {
+    if (!(data instanceof Buffer)) {
       throw 'Unsupported write data type ' + data.constructor.name +
       ', must be Buffer';
     }

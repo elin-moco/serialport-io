@@ -22,8 +22,7 @@ function SocketIoSerialPort(options) {
 
         if (data.buffer instanceof ArrayBuffer) {
           data = new Uint8Array(data.buffer);
-        }
-        else {
+        } else {
           data = new Uint8Array(self._toArrayBuffer(data.buffer));
         }
         if (null !== self.buffer) {
@@ -58,7 +57,7 @@ SocketIoSerialPort.prototype.connect = function() {
       self.client.emit('device-connect', self.device, function() {
         resolve();
       });
-    } catch(e) {
+    } catch (e) {
       reject(e);
     }
   });
@@ -71,7 +70,7 @@ SocketIoSerialPort.prototype.disconnect = function() {
       self.client.emit('device-disconnect', self.device, function() {
         resolve();
       });
-    } catch(e) {
+    } catch (e) {
       reject(e);
     }
   });
@@ -122,15 +121,6 @@ SocketIoSerialPort.prototype._concatBuffer = function(buffer1, buffer2) {
   tmp.set(buffer1 , 0);
   tmp.set(buffer2, buffer1.byteLength);
   return tmp;
-};
-
-SocketIoSerialPort.prototype._toBuffer = function(ab) {
-  var buffer = new Buffer(ab.byteLength);
-  var view = new Uint8Array(ab);
-  for (var i = 0; i < buffer.length; ++i) {
-    buffer[i] = view[i];
-  }
-  return buffer;
 };
 
 SocketIoSerialPort.prototype._toArrayBuffer = function(buffer) {

@@ -1,4 +1,4 @@
-/* global io,SocketIoSerialPort,firmata */
+/* global require */
 'use strict';
 
 var io = require('socket.io-client');
