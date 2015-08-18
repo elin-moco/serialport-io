@@ -16,12 +16,10 @@ var sp = new SocketIoSerialPort({
 
 var toggle = document.getElementById('led-blink');
 
-sp.open(function() {
-  console.log('SocketIoSerialPort.open');
+sp.connect().then(function() {
   // have a ready serial port, do something with it:
   var board = new five.Board({port: sp, repl: false});
   board.on('ready', function() {
-    console.log('actually connected to an arduino!');
     var led = new five.Led(7);
     led.blink();
     toggle.addEventListener('change', function() {

@@ -30,18 +30,22 @@ node server.js
 ```
 Will get you started, server is listening on port 3000 by default.
 This server pass data bewteen browser and node.js to control your device,
-make sure your server is running before running your code in browser.
+make sure your server is running before running your code in browser or node.js.
 
 # Use with Johnny Five
 
 Include Johnny Five bundle script in your html file:
-```html
+```js
   <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="j5-bundle.js"></script>
 ```
+```javascript
+var SocketIoSerialPort = require('serialport-io').SerialPort;
+var five = require('johnny-five');
+```
 
 Then use it directly in your script:
-```js
+```javascript
 var socket = io('ws://localhost:3000');
 
 var sp = new SocketIoSerialPort({
@@ -52,7 +56,7 @@ var sp = new SocketIoSerialPort({
   }
 });
 
-sp.open(function() {
+sp.connect().then(function() {
   console.log('SocketIoSerialPort.open');
   // have a ready serial port, do something with it:
   var board = new five.Board({port: sp, repl: false});
@@ -75,9 +79,14 @@ Include the firmata bundle script in your html file:
   <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="firmata-bundle.js"></script>
 ```
+To use with [node.js], you'll need these two require statements:
+```javascript
+var SocketIoSerialPort = require('serialport-io').SerialPort;
+var firmata = require('firmata');
+```
 
 Then use it directly in your script:
-```js
+```javascript
 var socket = io('ws://localhost:3000');
 
 var sp = new SocketIoSerialPort({
@@ -88,7 +97,7 @@ var sp = new SocketIoSerialPort({
   }
 });
 
-sp.open(function() {
+sp.connect().then(function() {
   console.log('SocketIoSerialPort.open');
   // have a ready serial port, do something with it:
   var board = new firmata.Board(sp);

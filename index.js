@@ -19,7 +19,13 @@ function SocketIoSerialPort(options) {
       //Make sure we only get data that's targeting this device
       if (data.buffer && data.device.channel == self.device.channel &&
         data.device.address == self.device.address) {
-        data = new Uint8Array(data.buffer);
+
+        if (data.buffer instanceof ArrayBuffer) {
+          data = new Uint8Array(data.buffer);
+        }
+        else {
+          data = new Uint8Array(self._toArrayBuffer(data.buffer));
+        }
         if (null !== self.buffer) {
           self.buffer = self._concatBuffer(self.buffer, data);
           if (data[data.length - 1] === END_SYSEX) {
@@ -45,12 +51,36 @@ function SocketIoSerialPort(options) {
 
 util.inherits(SocketIoSerialPort, stream.Stream);
 
-SocketIoSerialPort.prototype.open = function(callback) {
-  console.log('open');
-  this.client.emit('device-connect', this.device, callback);
+SocketIoSerialPort.prototype.connect = function() {
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    try {
+      self.client.emit('device-connect', self.device, function() {
+        resolve();
+      });
+    } catch(e) {
+      reject(e);
+    }
+  });
+};
+
+SocketIoSerialPort.prototype.disconnect = function() {
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    try {
+      self.client.emit('device-disconnect', self.device, function() {
+        resolve();
+      });
+    } catch(e) {
+      reject(e);
+    }
+  });
 };
 
 SocketIoSerialPort.prototype.write = function(data, callback) {
+  if (data instanceof Uint8Array) {
+    data = data.buffer;
+  }
   try {
     var sendObj = {};
     sendObj.device = this.device;
@@ -63,20 +93,25 @@ SocketIoSerialPort.prototype.write = function(data, callback) {
   }
 };
 
+SocketIoSerialPort.prototype.open = function(callback) {
+  if (callback) {
+    callback();
+  }
+};
+
 SocketIoSerialPort.prototype.close = function(callback) {
-  console.log('closing');
-  this.client.emit('device-disconnect', this.device, callback);
+  if (callback) {
+    callback();
+  }
 };
 
 SocketIoSerialPort.prototype.flush = function(callback) {
-  console.log('flush');
   if (callback) {
     callback();
   }
 };
 
 SocketIoSerialPort.prototype.drain = function(callback) {
-  console.log('drain');
   if (callback) {
     callback();
   }
@@ -87,6 +122,24 @@ SocketIoSerialPort.prototype._concatBuffer = function(buffer1, buffer2) {
   tmp.set(buffer1 , 0);
   tmp.set(buffer2, buffer1.byteLength);
   return tmp;
+};
+
+SocketIoSerialPort.prototype._toBuffer = function(ab) {
+  var buffer = new Buffer(ab.byteLength);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buffer.length; ++i) {
+    buffer[i] = view[i];
+  }
+  return buffer;
+};
+
+SocketIoSerialPort.prototype._toArrayBuffer = function(buffer) {
+  var ab = new ArrayBuffer(buffer.length);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buffer.length; ++i) {
+    view[i] = buffer[i];
+  }
+  return ab;
 };
 
 function SocketIoFirefox(socket) {

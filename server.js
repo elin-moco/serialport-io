@@ -15,11 +15,27 @@ io.on('connection', function(socket) {
   console.log('socket connected');
   var connectedDevices = [];
 
+  function _toBuffer(ab) {
+    var buffer = new Buffer(ab.byteLength);
+    var view = new Uint8Array(ab);
+    for (var i = 0; i < buffer.length; ++i) {
+      buffer[i] = view[i];
+    }
+    return buffer;
+  }
+
   function initDevice(sp, device, callback) {
     if (sp) {
       sp.on('data', function(data) {
         if (!Buffer.isBuffer(data)) {
-          data = new Buffer(data);
+          if (data instanceof ArrayBuffer) {
+            data = _toBuffer(data);
+          } else if (data instanceof Uint8Array) {
+            data = _toBuffer(data.buffer);
+          } else {
+            throw 'Unsupported read data type ' + data.constructor.name +
+            ', must be Uint8Array, ArrayBuffer or Buffer';
+          }
         }
 
         var sendObj = {};
@@ -40,18 +56,19 @@ io.on('connection', function(socket) {
 
   //write data to device
   socket.on('device-data-write', function(data, callback) {
-    try {
-      if (data.buffer) {
-        var deviceKey = data.device.channel + ':' + data.device.address;
-        if (connectedDevices.indexOf(deviceKey) >= 0 && allDevices[deviceKey]) {
-          allDevices[deviceKey].write(new Uint8Array(data.buffer.data));
-        }
-        if (callback) {
-          callback();
-        }
-      }
-    } catch (exp) {
-      console.error('error reading message', data.device, exp);
+    var device = data.device;
+    var deviceKey = device.channel + ':' + device.address;
+    data = data.buffer;
+    if (!data instanceof Buffer) {
+      throw 'Unsupported write data type ' + data.constructor.name +
+      ', must be Buffer';
+    }
+    if (connectedDevices.indexOf(deviceKey) >= 0 && allDevices[deviceKey]) {
+      //allDevices[deviceKey].write(new Uint8Array(data.buffer.data));
+      allDevices[deviceKey].write(data);
+    }
+    if (callback) {
+      callback();
     }
   });
 
