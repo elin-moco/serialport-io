@@ -1,6 +1,6 @@
 {
   "name": "serialport-io",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Virtual serial device over socket.io",
   "main": "index.js",
   "repository": {
