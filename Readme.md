@@ -10,7 +10,6 @@ First you need [git] and [node.js] to clone this repo and install dependencies:
 git clone https://github.com/elin-moco/serialport-io
 cd serialport-io
 npm install
-npm install --dev
 ```
 
 Secondly, you'll need an [Arduino] board with [StandardFirmata],
