@@ -1,0 +1,31 @@
+{
+  "name": "serialport-io",
+  "main": "index.js",
+  "version": "0.1.7",
+  "homepage": "https://github.com/elin-moco/serialport-io",
+  "authors": [
+    "Eddie Lin <elin@mozilla.com>"
+  ],
+  "description": "Virtual serial device over socket.io",
+  "keywords": [
+    "serialport",
+    "socketio",
+    "bluetooth",
+    "ble",
+    "johnny",
+    "five",
+    "firmata",
+    "arduino",
+    "cordova",
+    "phonegap",
+    "firefoxos"
+  ],
+  "license": "MPL 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "serialport-io",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Virtual serial device over socket.io",
   "main": "index.js",
   "repository": {
@@ -13,7 +13,7 @@
   "author": {
     "name": "Eddie Lin"
   },
-  "license": "Apache License 2.0",
+  "license": "MPL 2.0",
   "dependencies": {
     "serialport": "^1.7.4",
     "ble-serialport": "0.1.3",

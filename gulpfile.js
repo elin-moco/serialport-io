@@ -26,6 +26,7 @@ var lintSources = [
   '**/*.js',
   '!' + options.param.build + '/**',
   '!' + options.param.dist + '/**',
+  '!example/browser-j5-car/bower_components/**',
   '!node_modules/**'
 ];
 
@@ -34,6 +35,7 @@ gulp.task('jsonlint', function() {
     '**/*.json',
     '!' + options.param.build + '/**',
     '!' + options.param.dist + '/**',
+    '!example/browser-j5-car/bower_components/**',
     '!node_modules/**'])
     .pipe(jsonlint())
     .pipe(jsonlint.reporter());
