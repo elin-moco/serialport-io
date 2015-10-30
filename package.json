@@ -1,6 +1,6 @@
 {
   "name": "serialport-io",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Virtual serial device over socket.io",
   "main": "index.js",
   "repository": {
@@ -15,7 +15,7 @@
   },
   "license": "MPL 2.0",
   "dependencies": {
-    "ble-serialport": "0.1.6",
+    "ble-serialport": "0.1.7",
     "noble": "^1.2.0",
     "node-firefox": "^0.1.0",
     "serialport": "^1.7.4",
