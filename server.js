@@ -97,10 +97,16 @@ io.on('connection', function(socket) {
 
   socket.on('device-disconnect', function(device, callback) {
     try {
-      console.log('device connected');
+      console.log('device disconnected');
       //reset and clear device
       var deviceKey = device.channel + ':' + device.address;
-      allDevices[deviceKey].write(new Uint8Array([0xFF]));
+      var sp = allDevices[deviceKey];
+      sp.write(new Uint8Array([0xFF]));
+      if (sp.disconnect) {
+        sp.disconnect().then(function() {
+          console.log('disconnect serialport');
+        });
+      }
       connectedDevices.splice(connectedDevices.indexOf(deviceKey), 1);
       if (callback) {
         callback();
