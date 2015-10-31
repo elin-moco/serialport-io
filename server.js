@@ -108,6 +108,7 @@ io.on('connection', function(socket) {
         });
       }
       connectedDevices.splice(connectedDevices.indexOf(deviceKey), 1);
+      allDevices[deviceKey] = undefined;
       if (callback) {
         callback();
       }
@@ -167,9 +168,16 @@ io.on('connection', function(socket) {
     console.log('socket disconnected');
     //reset and clear all connected devices
     connectedDevices.forEach(function(deviceKey) {
-      allDevices[deviceKey].write(new Uint8Array([0xFF]));
+      var sp = allDevices[deviceKey];
+      sp.write(new Uint8Array([0xFF]));
+      if (sp.disconnect) {
+        sp.disconnect().then(function() {
+          console.log('disconnect serialport');
+        });
+      }
     });
     connectedDevices = [];
+    allDevices = {};
   });
 });
 console.log('server ready');
